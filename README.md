@@ -1,46 +1,24 @@
-# Getting Started with Create React App
+# DistanceFinder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Simple sample app to determinate distance between two georereferenced points using Nominatim API and the Haversine formula.
 
-## Available Scripts
+## Index
 
-In the project directory, you can run:
+- [Setup and run project](#setup-and-run-project)
+- [About the solution](#about-the-solution)
 
-### `npm start`
+## Setup and run project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Follow the following steps to run the app (you need to have locally installed yarn):
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- yarn install && yarn start
 
-### `npm test`
+## About the solution
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+In order to solve the requirement (calculate distance bewtween 2 given address), it was implemented a simple
+create react app with Typecripts that implements a simple form throught react-hook-form library, asking for the
+2 addresses. Once the form is submitted, it makes a request to Nominatim API to get the latitude and longitude.
+If the request success, it calculate the distance using the lat and long, and the Haversine formula. It might be
+some scenarios where the address is not the intended, since the API response was not accurate.
+The summary result shows the real address that was considered for the calculation, so the user can decide if is correct or no.
+If the request fails, it ask to the user to repeat the process
