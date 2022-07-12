@@ -16,8 +16,8 @@
     "incremental": true,
     "baseUrl": "./src",
     "paths": {
-      "actions": ["actions"],
       "components": ["components"],
+      "context": ["context"],
       "env": ["env"],
       "models": ["models"],
       "services": ["services"],

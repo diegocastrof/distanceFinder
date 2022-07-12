@@ -14,7 +14,11 @@ export interface AddressData {
 }
 
 export interface Coordinates {
-  latitude?: number;
-  longitude?: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
   addressName?: string;
+  error: boolean;
+  errorMessage?: string;
 }
+
+export type AddressType = "from" | "to";

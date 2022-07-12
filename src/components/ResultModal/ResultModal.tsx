@@ -1,46 +1,15 @@
-import { FC, useEffect, useState } from "react";
-import { AddressData, Coordinates } from "models";
-import "./ResultModaStyles.css";
-import getAddressCoordinates from "actions/getAddressCoordinates";
+import { FC } from "react";
+import { useApp } from "context/appContext";
+
 import { getDistanceFromLatLonInKm } from "utils";
+import "./ResultModaStyles.css";
 
 interface Props {
-  fromAddressData: AddressData;
-  toAddressData: AddressData;
   closeModal: () => void;
 }
 
-const ResultModal: FC<Props> = ({
-  fromAddressData,
-  toAddressData,
-  closeModal,
-}) => {
-  const [loadingResults, setLoadingResults] = useState(false);
-  const [fromAddressCoordinates, setFromAddressCoordinates] =
-    useState<Coordinates | null>(null);
-  const [toAddressCoordinates, setToAddressCoordinates] =
-    useState<Coordinates | null>(null);
-
-  useEffect(() => {
-    console.log(fromAddressData, toAddressData, "running...");
-
-    if (!fromAddressData || !toAddressData) return;
-
-    const handleOnMount = async () => {
-      setLoadingResults(true);
-      const fromAddressCoordinatesResponse = await getAddressCoordinates(
-        fromAddressData as AddressData,
-      );
-      const toAddressCoordinatesResponse = await getAddressCoordinates(
-        toAddressData as AddressData,
-      );
-      setFromAddressCoordinates(fromAddressCoordinatesResponse);
-      setToAddressCoordinates(toAddressCoordinatesResponse);
-      setLoadingResults(false);
-    };
-
-    handleOnMount();
-  }, [fromAddressData, toAddressData]);
+const ResultModal: FC<Props> = ({ closeModal }) => {
+  const { state } = useApp();
 
   return (
     <div className="result-modal-root">
@@ -51,23 +20,35 @@ const ResultModal: FC<Props> = ({
         </button>
       </div>
       <div className="result-modal--body">
-        {loadingResults ? (
+        {state.loading ? (
           <p>Calculating results...</p>
         ) : (
           <>
-            <p>Initial address: {fromAddressCoordinates?.addressName}</p>
-            <p>Target address: {toAddressCoordinates?.addressName}</p>
+            {state.fromCoordinates.error ? (
+              <p>{state.fromCoordinates.errorMessage}</p>
+            ) : (
+              <p>Initial address: {state.fromCoordinates?.addressName}</p>
+            )}
 
-            <p>
-              The distance is{" "}
-              {getDistanceFromLatLonInKm(
-                fromAddressCoordinates?.latitude as number,
-                fromAddressCoordinates?.longitude as number,
-                toAddressCoordinates?.latitude as number,
-                toAddressCoordinates?.longitude as number,
-              )}{" "}
-              km
-            </p>
+            {state.toCoordinates.error ? (
+              <p>{state.toCoordinates.errorMessage}</p>
+            ) : (
+              <p>Target address: {state.toCoordinates?.addressName}</p>
+            )}
+            {state.fromCoordinates.error || state.toCoordinates.error ? (
+              <p>We couldn't find the distance. Sorry</p>
+            ) : (
+              <p>
+                The distance is{" "}
+                {getDistanceFromLatLonInKm(
+                  state.fromCoordinates?.latitude as number,
+                  state.fromCoordinates?.longitude as number,
+                  state.toCoordinates?.latitude as number,
+                  state.toCoordinates?.longitude as number,
+                )}{" "}
+                km
+              </p>
+            )}
           </>
         )}
       </div>

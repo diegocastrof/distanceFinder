@@ -3,21 +3,23 @@ import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import AddressInput from "components/AddressInput/AddressInput";
+import { useApp } from "context/appContext";
 import validationSchema from "./validationSchema";
 import { AddressData, MainFormData } from "models";
 import "./MainFormStyles.css";
-
-interface Props {
-  setFromAddressData: React.Dispatch<React.SetStateAction<AddressData | null>>;
-  setToAddressData: React.Dispatch<React.SetStateAction<AddressData | null>>;
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MainForm: FC<Props> = ({
+import {
+  getAddressCoordinates,
   setFromAddressData,
   setToAddressData,
-  setIsModalOpen,
-}) => {
+} from "context/appActions";
+
+interface Props {
+  openModal: () => void;
+}
+
+const MainForm: FC<Props> = ({ openModal }) => {
+  const { dispatch } = useApp();
+
   const methods = useForm<MainFormData>({
     resolver: yupResolver(validationSchema),
   });
@@ -34,9 +36,11 @@ const MainForm: FC<Props> = ({
       city: data.toCity,
       country: data.toCountry,
     };
-    setFromAddressData(fromAddressData);
-    setToAddressData(toAddressData);
-    setIsModalOpen(true);
+    dispatch(setFromAddressData(fromAddressData));
+    dispatch(setToAddressData(toAddressData));
+    getAddressCoordinates("from", fromAddressData, dispatch);
+    getAddressCoordinates("to", toAddressData, dispatch);
+    openModal();
   };
 
   return (
