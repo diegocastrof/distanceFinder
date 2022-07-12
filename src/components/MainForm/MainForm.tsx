@@ -1,28 +1,42 @@
+import { FC } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import AddressInput from "components/AddressInput/AddressInput";
-import getAddressCoordinates from "actions/getAddressCoordinates";
 import validationSchema from "./validationSchema";
 import { AddressData, MainFormData } from "models";
 import "./MainFormStyles.css";
 
-function App() {
+interface Props {
+  setFromAddressData: React.Dispatch<React.SetStateAction<AddressData | null>>;
+  setToAddressData: React.Dispatch<React.SetStateAction<AddressData | null>>;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MainForm: FC<Props> = ({
+  setFromAddressData,
+  setToAddressData,
+  setIsModalOpen,
+}) => {
   const methods = useForm<MainFormData>({
     resolver: yupResolver(validationSchema),
   });
   const { handleSubmit } = methods;
 
-  // console.log(errors);
-
-  const onSubmit = async (data: MainFormData) => {
-    const addressData: AddressData = {
+  const onSubmit = async (data: MainFormData): Promise<void> => {
+    const fromAddressData: AddressData = {
       street: data.fromStreet,
       city: data.fromCity,
       country: data.fromCountry,
     };
-    const response = await getAddressCoordinates(addressData);
-    console.log(response);
+    const toAddressData: AddressData = {
+      street: data.toStreet,
+      city: data.toCity,
+      country: data.toCountry,
+    };
+    setFromAddressData(fromAddressData);
+    setToAddressData(toAddressData);
+    setIsModalOpen(true);
   };
 
   return (
@@ -57,6 +71,6 @@ function App() {
       </form>
     </FormProvider>
   );
-}
+};
 
-export default App;
+export default MainForm;

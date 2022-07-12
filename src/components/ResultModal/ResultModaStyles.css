@@ -1,0 +1,28 @@
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.ReactModal__Content {
+  position: relative !important;
+  background-color: white;
+  width: 50vw;
+  height: 500px;
+}
+
+.result-modal--header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -24,9 +24,12 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
     project: "./tsconfig.json",
+    tsconfigRootDir: __dirname,
+    sourceType: "module",
   },
   rules: {
     "linebreak-style": "off",
+    "react-hooks/rules-of-hooks": "off",
     "prettier/prettier": [
       "error",
       {

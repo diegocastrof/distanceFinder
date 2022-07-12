@@ -3,9 +3,9 @@ import Swal from "sweetalert2";
 import services from "services";
 import { AddressData, Coordinates } from "models";
 
-const getAddressCoordinates = async (
+const useGetAddressCoordinates = async (
   addressData: AddressData,
-): Promise<Coordinates | null> => {
+): Promise<Coordinates> => {
   try {
     const response = await services.getLocationRequest(addressData);
     const address = response.data[0];
@@ -16,8 +16,8 @@ const getAddressCoordinates = async (
     };
   } catch (e) {
     Swal.fire("Something went wrong", "Please try it again", "error");
-    return null;
+    return {};
   }
 };
 
-export default getAddressCoordinates;
+export default useGetAddressCoordinates;
