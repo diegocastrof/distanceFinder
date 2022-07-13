@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface MainFormData {
   fromStreet: string;
   fromCity: string;
@@ -19,6 +21,17 @@ export interface Coordinates {
   addressName?: string;
   error: boolean;
   errorMessage?: string;
+}
+
+export interface ResultData {
+  fromAddressName: string;
+  fromAddressLatitude: number;
+  fromAddressLongitude: number;
+  toAddressName: string;
+  toAddressLatitude: number;
+  toAddressLongitude: number;
+  distance: number;
+  created: Timestamp;
 }
 
 export type AddressType = "from" | "to";

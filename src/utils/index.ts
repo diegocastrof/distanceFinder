@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export const deg2rad = (deg: number) => {
   return deg * (Math.PI / 180);
 };
@@ -20,4 +22,22 @@ export const getDistanceFromLatLonInKm = (
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const d = R * c;
   return d;
+};
+
+const padTo2Digits = (num: number): string => {
+  if (!num) return "";
+  return num.toString().padStart(2, "0");
+};
+
+const formatDate = (date: Date): string => {
+  if (!date) return "";
+  return [
+    padTo2Digits(date?.getDate()),
+    padTo2Digits(date?.getMonth() + 1),
+    date?.getFullYear(),
+  ].join("/");
+};
+
+export const parseDateFromTimestamp = (timestamp: Timestamp): string => {
+  return formatDate(new Date(timestamp.toDate()));
 };
