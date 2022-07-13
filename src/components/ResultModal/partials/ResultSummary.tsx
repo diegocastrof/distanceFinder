@@ -1,20 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 import { useApp } from "context/appContext";
-import { getDistanceFromLatLonInKm } from "utils";
 
-const ResultSummary = () => {
+interface Props {
+  calculatedDistance: number;
+}
+
+const ResultSummary: FC<Props> = ({ calculatedDistance }) => {
   const { state } = useApp();
 
   if (state.fromCoordinates.error || state.toCoordinates.error) {
     return <p>We couldn't find the distance. Sorry</p>;
   }
-
-  const calculatedDistance = getDistanceFromLatLonInKm(
-    state.fromCoordinates?.latitude as number,
-    state.fromCoordinates?.longitude as number,
-    state.toCoordinates?.latitude as number,
-    state.toCoordinates?.longitude as number,
-  );
 
   return (
     <p className="font-bold text-xl text-gray-600 text-center my-5">

@@ -2,7 +2,11 @@ import { FC } from "react";
 import { AddressSummary, ResultSummary } from "./partials";
 import { useApp } from "context/appContext";
 import { resetForm } from "context/appActions";
+import { db } from "config/firebase";
+import { collection, addDoc, Timestamp } from "firebase/firestore";
 import "./ResultModaStyles.css";
+import { getDistanceFromLatLonInKm } from "utils";
+import Swal from "sweetalert2";
 
 interface Props {
   closeModal: () => void;
@@ -14,6 +18,41 @@ const ResultModal: FC<Props> = ({ closeModal }) => {
   const handleResetFormValues = () => {
     dispatch(resetForm());
     closeModal();
+  };
+
+  const calculatedDistance = getDistanceFromLatLonInKm(
+    state.fromCoordinates?.latitude as number,
+    state.fromCoordinates?.longitude as number,
+    state.toCoordinates?.latitude as number,
+    state.toCoordinates?.longitude as number,
+  );
+
+  const handleSaveResults = async () => {
+    try {
+      await addDoc(collection(db, "trips"), {
+        fromAddressName: state.fromCoordinates.addressName,
+        fromAddressLatitude: state.fromCoordinates.latitude,
+        fromAddressLongitude: state.fromCoordinates.longitude,
+        toAddressName: state.toCoordinates.addressName,
+        toAddressLatitude: state.toCoordinates.latitude,
+        toAddressLongitude: state.toCoordinates.longitude,
+        distance: calculatedDistance,
+        created: Timestamp.now(),
+      });
+      await Swal.fire(
+        "All good!",
+        "Your results were saved successfully",
+        "success",
+      );
+      dispatch(resetForm());
+      closeModal();
+    } catch (err) {
+      Swal.fire(
+        "Something went wrong",
+        "Your results were not saved. Please try it again",
+        "error",
+      );
+    }
   };
 
   return (
@@ -31,7 +70,7 @@ const ResultModal: FC<Props> = ({ closeModal }) => {
           <>
             <AddressSummary addressType="from" />
             <AddressSummary addressType="to" />
-            <ResultSummary />
+            <ResultSummary calculatedDistance={calculatedDistance} />
           </>
         )}
       </div>
@@ -47,7 +86,7 @@ const ResultModal: FC<Props> = ({ closeModal }) => {
           <button
             type="button"
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
-            onClick={() => alert("saved to db")}
+            onClick={handleSaveResults}
           >
             Save results
           </button>
