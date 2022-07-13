@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -18,12 +18,12 @@ interface Props {
 }
 
 const MainForm: FC<Props> = ({ openModal }) => {
-  const { dispatch } = useApp();
+  const { state, dispatch } = useApp();
 
   const methods = useForm<MainFormData>({
     resolver: yupResolver(validationSchema),
   });
-  const { handleSubmit } = methods;
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = async (data: MainFormData): Promise<void> => {
     const fromAddressData: AddressData = {
@@ -43,6 +43,10 @@ const MainForm: FC<Props> = ({ openModal }) => {
     openModal();
   };
 
+  const handleReset = () => reset();
+
+  useEffect(handleReset, [state.resetForm, reset]);
+
   return (
     <FormProvider {...methods}>
       <form className="form-root" onSubmit={handleSubmit(onSubmit)}>
@@ -53,9 +57,20 @@ const MainForm: FC<Props> = ({ openModal }) => {
           id="fromStreet"
           label="Street"
           placeholder="My addresss #123"
+          defaultValue=""
         />
-        <AddressInput id="fromCity" label="City" placeholder="Santiago" />
-        <AddressInput id="fromCountry" label="Country" placeholder="Chile" />
+        <AddressInput
+          id="fromCity"
+          label="City"
+          placeholder="Santiago"
+          defaultValue=""
+        />
+        <AddressInput
+          id="fromCountry"
+          label="Country"
+          placeholder="Chile"
+          defaultValue=""
+        />
         <h3 className="text-xl font-bold text-red-600 mb-3">
           Select target address
         </h3>
@@ -63,9 +78,20 @@ const MainForm: FC<Props> = ({ openModal }) => {
           id="toStreet"
           label="Street"
           placeholder="My addresss #123"
+          defaultValue=""
         />
-        <AddressInput id="toCity" label="City" placeholder="Santiago" />
-        <AddressInput id="toCountry" label="Country" placeholder="Chile" />
+        <AddressInput
+          id="toCity"
+          label="City"
+          placeholder="Santiago"
+          defaultValue=""
+        />
+        <AddressInput
+          id="toCountry"
+          label="Country"
+          placeholder="Chile"
+          defaultValue=""
+        />
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

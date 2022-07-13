@@ -6,6 +6,7 @@ import {
   SET_FROM_COORDINATES,
   SET_TO_COORDINATES,
   SET_IS_LOADING,
+  RESET_FORM,
 } from "./appTypes";
 
 const initialAddressData = {
@@ -29,6 +30,7 @@ export const initialState: State = {
 
   toCoordinates: initialCoordinates,
   loading: false,
+  resetForm: false,
 };
 
 const apiReducer = (state: State, action: Action): State => {
@@ -67,6 +69,12 @@ const apiReducer = (state: State, action: Action): State => {
       return {
         ...state,
         loading: action.loading,
+      };
+    }
+    case RESET_FORM: {
+      return {
+        ...state,
+        resetForm: !state.resetForm,
       };
     }
     default: {

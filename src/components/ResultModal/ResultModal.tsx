@@ -1,7 +1,7 @@
 import { FC } from "react";
+import { AddressSummary, ResultSummary } from "./partials";
 import { useApp } from "context/appContext";
-
-import { getDistanceFromLatLonInKm } from "utils";
+import { resetForm } from "context/appActions";
 import "./ResultModaStyles.css";
 
 interface Props {
@@ -9,10 +9,15 @@ interface Props {
 }
 
 const ResultModal: FC<Props> = ({ closeModal }) => {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
+
+  const handleResetFormValues = () => {
+    dispatch(resetForm());
+    closeModal();
+  };
 
   return (
-    <div className="result-modal-root">
+    <div className="flex flex-col justify-between h-full">
       <div className="result-modal--header">
         <h2 className="text-3xl font-bold text-red-600 mb-3">Results</h2>
         <button className="close-btn" onClick={closeModal}>
@@ -24,32 +29,28 @@ const ResultModal: FC<Props> = ({ closeModal }) => {
           <p>Calculating results...</p>
         ) : (
           <>
-            {state.fromCoordinates.error ? (
-              <p>{state.fromCoordinates.errorMessage}</p>
-            ) : (
-              <p>Initial address: {state.fromCoordinates?.addressName}</p>
-            )}
-
-            {state.toCoordinates.error ? (
-              <p>{state.toCoordinates.errorMessage}</p>
-            ) : (
-              <p>Target address: {state.toCoordinates?.addressName}</p>
-            )}
-            {state.fromCoordinates.error || state.toCoordinates.error ? (
-              <p>We couldn't find the distance. Sorry</p>
-            ) : (
-              <p>
-                The distance is{" "}
-                {getDistanceFromLatLonInKm(
-                  state.fromCoordinates?.latitude as number,
-                  state.fromCoordinates?.longitude as number,
-                  state.toCoordinates?.latitude as number,
-                  state.toCoordinates?.longitude as number,
-                )}{" "}
-                km
-              </p>
-            )}
+            <AddressSummary addressType="from" />
+            <AddressSummary addressType="to" />
+            <ResultSummary />
           </>
+        )}
+      </div>
+      <div className="flex justify-between items-center">
+        <button
+          type="button"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+          onClick={handleResetFormValues}
+        >
+          Reset Form Values
+        </button>
+        {!(state.fromCoordinates.error || state.toCoordinates.error) && (
+          <button
+            type="button"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
+            onClick={() => alert("saved to db")}
+          >
+            Save results
+          </button>
         )}
       </div>
     </div>

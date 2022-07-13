@@ -5,6 +5,7 @@ import { AddressData, AddressType, Coordinates } from "models";
 import {
   Action,
   Dispatch,
+  RESET_FORM,
   SET_FROM_ADDRESS_DATA,
   SET_FROM_COORDINATES,
   SET_IS_LOADING,
@@ -39,6 +40,10 @@ export const setToCoordinates = (
 export const setIsLoading = (loading: boolean): Action => ({
   type: SET_IS_LOADING,
   loading,
+});
+
+export const resetForm = (): Action => ({
+  type: RESET_FORM,
 });
 
 export const getAddressCoordinates = async (
